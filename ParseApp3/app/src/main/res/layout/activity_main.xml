@@ -21,7 +21,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/searchView"
         android:layout_gravity="center_horizontal"
-        android:saveEnabled="true"
         android:layout_margin="@dimen/abc_dialog_padding_top_material"
         android:background="@drawable/black"
         />

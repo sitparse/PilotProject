@@ -1,5 +1,5 @@
 package com.example.shubhambakshi.parseapp3;
-import android.app.Activity;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
@@ -17,14 +17,15 @@ import com.parse.ParseQuery;
 import java.util.ArrayList;
 import com.parse.ParseGeoPoint;
 import com.daimajia.numberprogressbar.NumberProgressBar;
-import java.util.Timer;
 import android.view.Menu;
 import android.widget.Button;
 import android.content.Intent;
 import android.app.ListActivity;
-import android.view.Window;
 import android.widget.LinearLayout;
 import android.os.AsyncTask;
+
+import org.w3c.dom.Text;
+
 /**
  * Created by Shubham Bakshi on 07-08-2015.
  */
@@ -32,9 +33,9 @@ public class Searchoperate extends ListActivity {
     static List<ParseObject> validList = new ArrayList<ParseObject>();
     ListView contactListView1;
     float longitude, latitude;
-    private Timer timer;
+    private TextView textView;
     private NumberProgressBar numprogressbar;
-    public static View myview;
+    private Button mapButton;
     LinearLayout linlaHeaderProgress;
     ArrayAdapter adapter;
     @Override
@@ -44,8 +45,10 @@ public class Searchoperate extends ListActivity {
         setContentView(R.layout.contactlistview);
         linlaHeaderProgress = (LinearLayout) findViewById(R.id.linlaHeaderProgress);
         contactListView1 = (ListView)findViewById(R.id.list);
-        // MainActivity.spinner.setVisibility(View.GONE);
-        //  setContentView(R.layout.fragment_activity);
+        textView = (TextView)findViewById(R.id.textView);
+        mapButton = (Button)findViewById(R.id.mapButton);
+        addActionListenerToButton();
+
         final ParseObject testObject = new ParseObject("PARSE");
         final ParseQuery<ParseObject> query = ParseQuery.getQuery("PARSE");
 
@@ -63,23 +66,24 @@ public class Searchoperate extends ListActivity {
 
                     }
                 }
+                ParseGeoPoint userLocation = (ParseGeoPoint) new ParseGeoPoint(13.329236, 77.09808);
+                ParseQuery<ParseObject> newquery = ParseQuery.getQuery("PARSE");
+                newquery.whereNear("latitude", userLocation);
+
+                newquery.findInBackground(new FindCallback<ParseObject>() {
+                    @Override
+                    public void done(List<ParseObject> list, ParseException e) {
+                        validList = checkAndCreateList(list, MainActivity.searchString);
+                        populateList();
+                        new Task().execute();
+                        // MapMarkerset(validList);
+                    }
+                });
+
             }
         });
-        ParseGeoPoint userLocation = (ParseGeoPoint) new ParseGeoPoint(13.329236, 77.09808);
-        ParseQuery<ParseObject> newquery = ParseQuery.getQuery("PARSE");
-        newquery.whereNear("latitude", userLocation);
 
-        newquery.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> list, ParseException e) {
-                validList = checkAndCreateList(list, MainActivity.searchString);
-                populateList();
-                new Task().execute();
-                // MapMarkerset(validList);
-            }
-        });
-        //    addListenerOnButton();
-
+        addListenerOnButton();
     }
 
     private List<ParseObject> checkAndCreateList(List<ParseObject> list, String pattern) {
@@ -87,8 +91,14 @@ public class Searchoperate extends ListActivity {
         Iterator<ParseObject> itr = list.iterator();
         while (itr.hasNext()) {
             ParseObject testObject = itr.next();
-            if (isSubstring(testObject.get(MainActivity.searchParam.toString()).toString(), pattern)) {
-                validList.add(testObject);
+            if (!MainActivity.extrasearchParam.isEmpty()) {
+                if (isSubstring(testObject.get(MainActivity.searchParam.toString()).toString(), pattern) || isSubstring(testObject.get(MainActivity.extrasearchParam.toString()).toString(), pattern)) {
+                    validList.add(testObject);
+                }
+            } else {
+                if (isSubstring(testObject.get(MainActivity.searchParam.toString()).toString(), pattern)) {
+                    validList.add(testObject);
+                }
             }
         }
         return validList;
@@ -185,11 +195,13 @@ public class Searchoperate extends ListActivity {
         });
     }
 
-    class Task extends AsyncTask<String, Integer, Boolean> {
+    public class Task extends AsyncTask<String, Integer, Boolean> {
         @Override
         protected void onPreExecute() {
             linlaHeaderProgress.setVisibility(View.VISIBLE);
             contactListView1.setVisibility(View.GONE);
+            textView.setVisibility(View.GONE);
+            mapButton.setVisibility(View.GONE);
             super.onPreExecute();
         }
 
@@ -197,6 +209,8 @@ public class Searchoperate extends ListActivity {
         protected void onPostExecute(Boolean result) {
             linlaHeaderProgress.setVisibility(View.GONE);
             contactListView1.setVisibility(View.VISIBLE);
+            textView.setVisibility(View.VISIBLE);
+            mapButton.setVisibility(View.VISIBLE);
             adapter.notifyDataSetChanged();
             super.onPostExecute(result);
         }
@@ -205,7 +219,7 @@ public class Searchoperate extends ListActivity {
         protected Boolean doInBackground(String... params) {
 
             try {
-                Thread.sleep(3000);
+                Thread.sleep(100);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -213,6 +227,16 @@ public class Searchoperate extends ListActivity {
         }
 
 
+    }
+    public void addActionListenerToButton(){
+        Button mapButton = (Button) findViewById(R.id.mapButton);
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), MapActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }
 

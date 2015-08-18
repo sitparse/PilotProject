@@ -17,7 +17,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import android.widget.ProgressBar;
-import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
+import android.content.Context;
 /**
  * Created by User on 07-08-2015.
  */
@@ -26,6 +27,7 @@ public class MainActivity extends Activity {
     static TextView editText;
     static String searchString;
     static String searchParam;
+    static String extrasearchParam;
     ListView contactListView1;
     List<ParseObject> validList;
     public static ProgressBar spinner;
@@ -98,6 +100,9 @@ public class MainActivity extends Activity {
         }
 
             searchParam = param1.toString();
+        if(searchParam.equals("FirstName")){
+            extrasearchParam = "LastName";
+        }
      //   validateSearchParam(searchParam);
     }
 
@@ -110,7 +115,7 @@ public class MainActivity extends Activity {
     private boolean validateSearchParam(String param){
 
         switch(param) {
-            case "FirstName":  Pattern pattern = Pattern.compile("[A-Za-z]*");
+            case "FirstName":  Pattern pattern = Pattern.compile("[A-Za-z ]*");
             Matcher m = pattern.matcher(searchString);
             if (!m.matches()) {
                 Toast.makeText(getApplicationContext(), "Invalid input for Name", Toast.LENGTH_LONG).show();
@@ -119,7 +124,7 @@ public class MainActivity extends Activity {
             return true;
         //    break;
 
-            case "PhoneNumber": Pattern pattern1 = Pattern.compile("[0-9]*");
+            case "PhoneNumber": Pattern pattern1 = Pattern.compile("[0-9 ]*");
                 Matcher m1 = pattern1.matcher(searchString);
                 if(!m1.matches()){
                     Toast.makeText(getApplicationContext(),"Invalid input for Phone Number",Toast.LENGTH_LONG).show();
@@ -137,6 +142,13 @@ public class MainActivity extends Activity {
        return false;
     }
 
+    private String validateSearchString(String searchString){
+
+         searchString = searchString.trim();
+        return searchString;
+
+    }
+
     private int countchars(String str){
         int count;
         count = str.toString().toCharArray().length;
@@ -150,20 +162,29 @@ public class MainActivity extends Activity {
         button.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                InputMethodManager inputManager = (InputMethodManager)
+                        getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                        InputMethodManager.HIDE_NOT_ALWAYS);
                 if(searchParam==null){
                     Toast.makeText(getApplicationContext(),"Select a search Parameter",Toast.LENGTH_SHORT).show();
                     return;
                 }
                 searchView=(android.widget.SearchView)findViewById(R.id.searchView);
                 searchString = searchView.getQuery().toString();
+
                 if(searchString.isEmpty()){
-                    Toast.makeText(getApplicationContext(),"Search field empty",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),"Empty search field",Toast.LENGTH_LONG).show();
                     return;
                 }
+
+                searchString = validateSearchString(searchString);
                 if(!validateSearchParam(searchParam)){
                     return;
                }
              //   spinner.setVisibility(View.VISIBLE);
+
                Intent intent = new Intent(getApplicationContext(),Searchoperate.class);
                 startActivity(intent);
 
