@@ -1,0 +1,14 @@
+{
+  "global": {
+    "parseVersion": "1.5.0"
+  },
+  "applications": {
+    "PilotApp": {
+      "applicationId": "UScatQxieE3MNKjYZlfH5WvkuRQxz1rmcheGHtNL",
+      "masterKey": "VEZqOinBh9qebAb8S4CQTHbrQEbdOEqwz0GhSQTE"
+    },
+    "_default": {
+      "link": "PilotApp"
+    }
+  }
+}

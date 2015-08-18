@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Contact">
+
+
+    <TextView
+        android:layout_width="252dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_name"
+        android:layout_gravity="left" />
+
+
+    <TextView
+        android:layout_width="259dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_id"
+        android:layout_gravity="left" />
+
+
+    <TextView
+        android:layout_width="274dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_phone"
+        android:layout_gravity="left" />
+
+
+    <TextView
+        android:layout_width="269dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_email"
+        android:layout_gravity="left" />
+
+
+</LinearLayout>
+
+

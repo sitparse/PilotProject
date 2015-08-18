@@ -1,0 +1,10 @@
+
+<resources>
+    <string name="app_name">ParseApp</string>
+    <string name="title_activity_maps">Map</string>
+
+
+    <string name="menu_settings">Settings</string>
+    <string name="str_btn_find">Find</string>
+    <string name="hnt_et_location">Enter location</string>
+</resources>
