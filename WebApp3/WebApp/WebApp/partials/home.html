@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" ng-app="WebApp">
+<head>
+    <title></title>
+</head>
+<body ng-controller="searchController" >
+      <div id="popup1" ng-show="loading" class="overlay">
+      <div class="popup">
+      <a class="close" href="#popup1">&times;</a>
+        <div class="content">
+            <img src="stylesheet/img/preloader.gif">
+        </div>
+      </div>
+      </div>
+     <div class="header">
+          <h2 align="left" class="text">WebApp</h2></a>
+            <form class="form" ng-controller="searchController" ng-submit="submit()">
+			        <input type = "text" id = "searchString" placeholder = "Enter search string..." required="required" ng-model="name"/><br />
+			        <input type="submit" value="Submit" id="submit" class="btn"/>
+            </form>
+             </div>
+             <div class="contains">
+            <pre id="list" class="img-polaroid"></pre>
+            <pre id="map" class="img-polaroid"></pre></div>
+          
+</body>
+</html>
